@@ -23,7 +23,18 @@ follows:
     <td colspan="3"><i><b>scalars</b></i></td>
   </tr>
   <tr>
-    <td align="right" valign="top"><i>H(blob), H(bool), H(clob),<br/>H(decimal), H(float), H(int),<br/>H(null), H(string), H(symbol),<br/></i>or <i>H(timestamp)</i></td>
+    <td align="right" valign="top">
+      <i>H(blob)<br/>
+      H(bool)<br/>
+      H(clob)<br/>
+      H(decimal)<br/>
+      H(float)<br/>
+      H(int)<br/>
+      H(null)<br/>
+      H(string)<br/>
+      H(symbol)<br/>
+      H(timestamp)</i>
+    </td>
     <td valign="top">&rarr;</td>
     <td valign="top"><i>h(TQ</i> || <i>representation)</i></td>
   </tr>
@@ -46,7 +57,7 @@ follows:
     <td><i>h(TQ</i> || <i>H(value<sub>1</sub>)</i> || <i>H(value<sub>2</sub>)</i> || <i>...</i> || <i>H(value<sub>n</sub>))</i></td>
   </tr>
   <tr>
-    <td align="right"><i>H(annotated value)</i></td>
+    <td align="right"><i>H(annotated&nbsp;value)</i></td>
     <td>&rarr;</td>
     <td><i>h(TQ</i> || <i>H(annotation<sub>1</sub>)</i> || <i>H(annotation<sub>2</sub>)</i> || <i>...</i> || <i>H(annotation<sub>n</sub>)</i> || <i>H(value))</i></td>
   </tr>
@@ -54,19 +65,19 @@ follows:
     <td colspan="3"><i><b>where:</b></i></td>
   </tr>
   <tr>
-    <td align="right"><i>h(bytes)</i></td>
+    <td valign="top" align="right"><i>h(bytes)</i></td>
     <td colspan="2"><i>is the user-provided hash function</i></td>
   </tr>
   <tr>
-    <td align="right"><i>H(value)</i></td>
+    <td valign="top" align="right"><i>H(value)</i></td>
     <td colspan="2"><i>is a function that returns the hash of a value from the Ion data model</i></td>
   </tr>
   <tr>
-    <td align="right"><i>TQ</i></td>
+    <td valign="top" align="right"><i>TQ</i></td>
     <td colspan="2"><i>is a type qualifier octet consisting of a four-bit type code T followed by a four-bit qualifier Q</i></td>
   </tr>
   <tr>
-    <td align="right">|| or <i>concat()</i></td>
+    <td valign="top" align="right">|| or <i>concat()</i></td>
     <td colspan="2"><i>denotes concatenation</i></td>
   </tr>
 </table>
