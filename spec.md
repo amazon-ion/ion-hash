@@ -95,9 +95,9 @@ callers to define the *h(bytes)* function.
 ## Basic Field Formats
 
 Any UInt, Int, VarUInt, or VarInt fields are encoded in the manner
-defined in the Amazon Ion Binary Encoding specification with one
-difference: such fields shall encoded in minimal fashion -- no padding
-is allowed.
+defined in the [Amazon Ion Binary Encoding](http://amzn.github.io/ion-docs/binary.html)
+specification with one difference: such fields shall encoded in minimal
+fashion -- no padding is allowed.
 
 For example, `0x00 0x00 0x00 0x81` is a valid VarUInt in Ion binary, but
 shall be encoded as `0x81` for hashing purposes. Similarly,
