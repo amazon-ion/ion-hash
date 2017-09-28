@@ -158,11 +158,9 @@ Int representation |  magnitude [UInt]  |
 
 Zero is always encoded as positive; negative zero is illegal.
 
-If the value is zero then *T* must be 2, *Q* is zero, and there is no
-*magnitude* subfield. Similarly, if the value is `null.int` then *T*
-must be 2, *Q* is 15, and there are no *magnitude* subfield. As a
-result, when *T* is 3, both *Q* and the *magnitude* subfield must be
-non-zero.
+If the value is zero then *T* must be 2 and there is no *magnitude* subfield.
+Similarly, if the value is `null.int` then *T* must be 2, *Q* is 15, and there
+is no *magnitude* subfield. When *T* is 3, the *magnitude* subfield must be non-zero.
 
 ### 4: float
 
