@@ -14,29 +14,32 @@ follows:
 
 <table cellpadding="5">
   <tr>
-    <td colspan="3"><i><b>hash function</b></i></td>
+    <td align="right"><i>H(value)</i></td><td>&rarr;</td><td><i>h(s(value))</i></td>
   </tr>
   <tr>
-    <td align="right"><i>h(bytes)</i></td><td>&rarr;</td><td><i>hashed_bytes</i></td>
+    <td align="right"><i>h(bytes)</i></td><td>&rarr;</td><td><i>hashed bytes</i></td>
+  </tr>
+  <tr>
+    <td align="right"><i>s(value)</i></td><td>&rarr;</td><td><i>serialized bytes</i></td>
   </tr>
   <tr>
     <td colspan="3"><i><b>scalars</b></i></td>
   </tr>
   <tr>
     <td align="right" valign="top">
-      <i>H(blob)<br/>
-      H(bool)<br/>
-      H(clob)<br/>
-      H(decimal)<br/>
-      H(float)<br/>
-      H(int)<br/>
-      H(null)<br/>
-      H(string)<br/>
-      H(symbol)<br/>
-      H(timestamp)</i>
+      <i>s(blob)<br/>
+      s(bool)<br/>
+      s(clob)<br/>
+      s(decimal)<br/>
+      s(float)<br/>
+      s(int)<br/>
+      s(null)<br/>
+      s(string)<br/>
+      s(symbol)<br/>
+      s(timestamp)</i>
     </td>
     <td valign="top">&rarr;</td>
-    <td valign="top"><i>h(TQ</i> || <i>representation)</i></td>
+    <td valign="top"><i>D</i> || <i>TQ</i> || <i>escape(representation)</i> || <i>D</i></td>
   </tr>
   <tr>
     <td colspan="3"><i><b>containers</b></i></td>
@@ -44,37 +47,49 @@ follows:
   <tr>
     <td align="right"><i>H(field)</i></td>
     <td>&rarr;</td>
-    <td><i>h(H(field<sub>name</sub>)</i> || <i>H(field<sub>value</sub>))</i></td>
+    <td><i>h(D</i> || <i>s(field<sub>name</sub>)</i> || <i>s(field<sub>value</sub>)</i> || <i>D)</i></td>
   </tr>
   <tr>
-    <td align="right"><i>H(struct)</i></td>
+    <td align="right"><i>s(struct)</i></td>
     <td>&rarr;</td>
-    <td><i>h(TQ</i> || <i>concat(sort(H(field<sub>1</sub>), H(field<sub>2</sub>), ..., H(field<sub>n</sub>))))</i></td>
+    <td><i>D</i> || <i>TQ</i> || <i>concat(sort(escape(H(field<sub>1</sub>)), escape(H(field<sub>2</sub>)), ..., escape(H(field<sub>n</sub>))))</i> || <i>D</i></td>
   </tr>
   <tr>
-    <td align="right"><i>H(list)</i> or <i>H(sexp)</i></td>
+    <td align="right"><i>s(list)</i> or <i>s(sexp)</i></td>
     <td>&rarr;</td>
-    <td><i>h(TQ</i> || <i>H(value<sub>1</sub>)</i> || <i>H(value<sub>2</sub>)</i> || <i>...</i> || <i>H(value<sub>n</sub>))</i></td>
+    <td><i>D</i> || <i>TQ</i> || <i>s(value<sub>1</sub>)</i> || <i>s(value<sub>2</sub>)</i> || <i>...</i> || <i>s(value<sub>n</sub>))</i> || <i>D</i></td>
   </tr>
   <tr>
-    <td align="right"><i>H(annotated&nbsp;value)</i></td>
+    <td align="right"><i>s(annotated&nbsp;value)</i></td>
     <td>&rarr;</td>
-    <td><i>h(TQ</i> || <i>H(annotation<sub>1</sub>)</i> || <i>H(annotation<sub>2</sub>)</i> || <i>...</i> || <i>H(annotation<sub>n</sub>)</i> || <i>H(value))</i></td>
+    <td><i>D</i> || <i>TQ</i> || <i>s(annotation<sub>1</sub>)</i> || <i>s(annotation<sub>2</sub>)</i> || <i>...</i> || <i>s(annotation<sub>n</sub>)</i> || <i>s(value)</i> || <i>D</i></td>
   </tr>
   <tr>
     <td colspan="3"><i><b>where:</b></i></td>
-  </tr>
-  <tr>
-    <td valign="top" align="right"><i>h(bytes)</i></td>
-    <td colspan="2"><i>is the user-provided hash function</i></td>
   </tr>
   <tr>
     <td valign="top" align="right"><i>H(value)</i></td>
     <td colspan="2"><i>is a function that returns the hash of a value from the Ion data model</i></td>
   </tr>
   <tr>
+    <td valign="top" align="right"><i>h(bytes)</i></td>
+    <td colspan="2"><i>is the user-provided hash function</i></td>
+  </tr>
+  <tr>
+    <td valign="top" align="right"><i>s(value)</i></td>
+    <td colspan="2"><i>is a function that returns the serialized bytes of value</i></td>
+  </tr>
+  <tr>
+    <td valign="top" align="right"><i>D</i></td>
+    <td colspan="2"><i>is the single byte delimiter, <code>0xEF</code></i></td>
+  </tr>
+  <tr>
     <td valign="top" align="right"><i>TQ</i></td>
     <td colspan="2"><i>is a type qualifier octet consisting of a four-bit type code T followed by a four-bit qualifier Q</i></td>
+  </tr>
+  <tr>
+    <td valign="top" align="right"><i>escape(bytes)</i></td>
+    <td colspan="2"><i>is a function that replaces every occurrence of D (<code>0xEF</code>) with DD (<code>0xEF 0xEF</code>)</i></td>
   </tr>
   <tr>
     <td valign="top" align="right">|| or <i>concat()</i></td>
@@ -345,11 +360,11 @@ Zero-length blobs are legal, so *representation* may be empty.
 
 ### 11: list
 
-The representation of a `list` is the ordered concatenation of hashes of
+The representation of a `list` is the ordered concatenation of the serialized bytes of
 the contained elements.
 
 <pre><code>                    +-------------------------------------------+
-List representation | H(value<sub>1</sub>) || H(value<sub>2</sub>) || ... || H(value<sub>n</sub>) |
+List representation | s(value<sub>1</sub>) || s(value<sub>2</sub>) || ... || s(value<sub>n</sub>) |
                     +-------------------------------------------+
 </code></pre>
 
@@ -363,35 +378,34 @@ except with a different type code.
 Values of type `struct` are a group of unordered, named fields; ordering
 must be imposed for hashing purposes.
 
-The hash of a struct *field* is calculated by hashing the field name as
-a symbol, concatenating the hash of the field name and the hash of the
-field value, and hashing the result:
+The hash of a struct *field* is calculated by hashing the result of concatenating D,
+the serialized bytes of the field name (as a symbol), the serialized bytes
+of the field value, and another D:
 
-> *H(field) → h(H(field<sub>name</sub>) || H(field<sub>value</sub>))*
+> *H(field) → h(D || s(field<sub>name</sub>) || s(field<sub>value</sub>) || D)*
 
 The *representation* for a struct value is found by sorting the hashes
 of all the struct fields, and concatenating them:
 
-<pre><code>                      +---------------------------------------------------+
-Struct representation | concat(sort(H(field<sub>1</sub>), H(field<sub>2</sub>), ..., H(field<sub>n</sub>))) |
-                      +---------------------------------------------------+
+<pre><code>                      +---------------------------------------------------------------------------+
+Struct representation | concat(sort(escape(H(field<sub>1</sub>)), escape(H(field<sub>2</sub>)), ..., escape(H(field<sub>n</sub>)))) |
+                      +---------------------------------------------------------------------------+
 </code></pre>
 
 where `sort` is based on a lexicographical ordering of the octets as
 unsigned integers.
 
 Note that for struct fields whose value has one or more annotations, it
-is the field value that is annotated, not the field name/value
-combination.
+is the field value that is annotated, not the field name/value combination.
 
 ### 14: annotated value
 
 Values of type `annotation` are wrappers around another value.
-Calculating the *representation* requires hashing each annotation as a
-symbol, and hashing/concatenating as follows:
+Calculating the *representation* simply involves concatenating the
+serialized bytes of each annotation (as a symbol) and the value as follows:
 
 <pre><code>                               +----------------------------------------------------------------------+
-Annotated value representation | H(annotation<sub>1</sub>) || H(annotation<sub>2</sub>) || ... || H(annotation<sub>n</sub>) || H(value) |
+Annotated value representation | s(annotation<sub>1</sub>) || s(annotation<sub>2</sub>) || ... || s(annotation<sub>n</sub>) || s(value) |
                                +----------------------------------------------------------------------+
 </code></pre>
 
@@ -410,11 +424,6 @@ There must be at least one annotation.
     -   SIDs
     -   NOP Padding
     -   NOP Padding in struct fields
--   Implementations may find it beneficial to pre-compute hashes for
-    values that occur frequently, most notably a hash of the text for
-    each SID (as used in symbols, struct fieldnames, and annotations).
-    Pre-computed hashes of the `null` value for each type code, bools
-    (`true`, `false`), etc. may also be beneficial.
 -   If N represents the number of fields in a `struct`, time complexity
     of the hashing algorithm is governed by the sorting of the hashes of
     struct fields, O(N log N). Memory requirements are similarly
