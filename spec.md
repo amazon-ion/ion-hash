@@ -39,7 +39,7 @@ follows:
       s(timestamp)</i>
     </td>
     <td valign="top">&rarr;</td>
-    <td valign="top"><i>D</i> || <i>TQ</i> || <i>escape(representation)</i> || <i>D</i></td>
+    <td valign="top"><i>B</i> || <i>TQ</i> || <i>escape(representation)</i> || <i>E</i></td>
   </tr>
   <tr>
     <td colspan="3"><i><b>containers</b></i></td>
@@ -47,22 +47,22 @@ follows:
   <tr>
     <td align="right"><i>H(field)</i></td>
     <td>&rarr;</td>
-    <td><i>h(D</i> || <i>s(field<sub>name</sub>)</i> || <i>s(field<sub>value</sub>)</i> || <i>D)</i></td>
+    <td><i>h(B</i> || <i>s(field<sub>name</sub>)</i> || <i>s(field<sub>value</sub>)</i> || <i>E)</i></td>
   </tr>
   <tr>
     <td align="right"><i>s(struct)</i></td>
     <td>&rarr;</td>
-    <td><i>D</i> || <i>TQ</i> || <i>concat(sort(escape(H(field<sub>1</sub>)), escape(H(field<sub>2</sub>)), ..., escape(H(field<sub>n</sub>))))</i> || <i>D</i></td>
+    <td><i>B</i> || <i>TQ</i> || <i>concat(sort(escape(H(field<sub>1</sub>)), escape(H(field<sub>2</sub>)), ..., escape(H(field<sub>n</sub>))))</i> || <i>E</i></td>
   </tr>
   <tr>
     <td align="right"><i>s(list)</i> or <i>s(sexp)</i></td>
     <td>&rarr;</td>
-    <td><i>D</i> || <i>TQ</i> || <i>s(value<sub>1</sub>)</i> || <i>s(value<sub>2</sub>)</i> || <i>...</i> || <i>s(value<sub>n</sub>))</i> || <i>D</i></td>
+    <td><i>B</i> || <i>TQ</i> || <i>s(value<sub>1</sub>)</i> || <i>s(value<sub>2</sub>)</i> || <i>...</i> || <i>s(value<sub>n</sub>))</i> || <i>E</i></td>
   </tr>
   <tr>
     <td align="right"><i>s(annotated&nbsp;value)</i></td>
     <td>&rarr;</td>
-    <td><i>D</i> || <i>TQ</i> || <i>s(annotation<sub>1</sub>)</i> || <i>s(annotation<sub>2</sub>)</i> || <i>...</i> || <i>s(annotation<sub>n</sub>)</i> || <i>s(value)</i> || <i>D</i></td>
+    <td><i>B</i> || <i>TQ</i> || <i>s(annotation<sub>1</sub>)</i> || <i>s(annotation<sub>2</sub>)</i> || <i>...</i> || <i>s(annotation<sub>n</sub>)</i> || <i>s(value)</i> || <i>E</i></td>
   </tr>
   <tr>
     <td colspan="3"><i><b>where:</b></i></td>
@@ -80,16 +80,30 @@ follows:
     <td colspan="2"><i>is a function that returns the serialized bytes of value</i></td>
   </tr>
   <tr>
-    <td valign="top" align="right"><i>D</i></td>
-    <td colspan="2"><i>is the single byte delimiter, <code>0xEF</code></i></td>
-  </tr>
-  <tr>
     <td valign="top" align="right"><i>TQ</i></td>
     <td colspan="2"><i>is a type qualifier octet consisting of a four-bit type code T followed by a four-bit qualifier Q</i></td>
   </tr>
   <tr>
+    <td valign="top" align="right"><i>B</i></td>
+    <td colspan="2"><i>is the single byte begin marker,</i> <code>0x00</code></td>
+  </tr>
+  <tr>
+    <td valign="top" align="right"><i>E</i></td>
+    <td colspan="2"><i>is the single byte end marker,</i> <code>0x01</code></td>
+  </tr>
+  <tr>
+    <td valign="top" align="right"><i>ESC</i></td>
+    <td colspan="2"><i>is the single byte escape,</i> <code>0x02</code></td>
+  </tr>
+  <tr>
     <td valign="top" align="right"><i>escape(bytes)</i></td>
-    <td colspan="2"><i>is a function that replaces every occurrence of D (<code>0xEF</code>) with DD (<code>0xEF 0xEF</code>)</i></td>
+    <td colspan="2"><i>is a function that replaces every occurrence of:</i>
+      <ul>
+        <li><i>B</i> (<code>0x00</code>) <i>with ESC B</i> (<code>0x02 0x00</code>)
+        <li><i>E</i> (<code>0x01</code>) <i>with ESC E</i> (<code>0x02 0x01</code>)
+        <li><i>ESC</i> (<code>0x02</code>) <i>with ESC ESC</i> (<code>0x02 0x02</code>)
+      </ul>
+    </td>
   </tr>
   <tr>
     <td valign="top" align="right">|| or <i>concat()</i></td>
@@ -378,11 +392,11 @@ except with a different type code.
 Values of type `struct` are a group of unordered, named fields; ordering
 must be imposed for hashing purposes.
 
-The hash of a struct *field* is calculated by hashing the result of concatenating D,
+The hash of a struct *field* is calculated by hashing the result of concatenating the begin marker B,
 the serialized bytes of the field name (as a symbol), the serialized bytes
-of the field value, and another D:
+of the field value, and the end marker E:
 
-> *H(field) → h(D || s(field<sub>name</sub>) || s(field<sub>value</sub>) || D)*
+> *H(field) → h(B || s(field<sub>name</sub>) || s(field<sub>value</sub>) || E)*
 
 The *representation* for a struct value is found by sorting the hashes
 of all the struct fields, and concatenating them:
