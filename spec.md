@@ -47,12 +47,12 @@ follows:
   <tr>
     <td align="right"><i>H(field)</i></td>
     <td>&rarr;</td>
-    <td><i>h(B</i> || <i>s(field<sub>name</sub>)</i> || <i>s(field<sub>value</sub>)</i> || <i>E)</i></td>
+    <td><i>h(s(field<sub>name</sub>)</i> || <i>s(field<sub>value</sub>))</i></td>
   </tr>
   <tr>
     <td align="right"><i>s(struct)</i></td>
     <td>&rarr;</td>
-    <td><i>B</i> || <i>TQ</i> || <i>concat(sort(escape(H(field<sub>1</sub>)), escape(H(field<sub>2</sub>)), ..., escape(H(field<sub>n</sub>))))</i> || <i>E</i></td>
+    <td><i>B</i> || <i>TQ</i> || <i>escape(concat(sort(H(field<sub>1</sub>), H(field<sub>2</sub>), ..., H(field<sub>n</sub>))))</i> || <i>E</i></td>
   </tr>
   <tr>
     <td align="right"><i>s(list)</i> or <i>s(sexp)</i></td>
@@ -85,23 +85,23 @@ follows:
   </tr>
   <tr>
     <td valign="top" align="right"><i>B</i></td>
-    <td colspan="2"><i>is the single byte begin marker,</i> <code>0x00</code></td>
+    <td colspan="2"><i>is the single byte begin marker,</i> <code>0x0B</code></td>
   </tr>
   <tr>
     <td valign="top" align="right"><i>E</i></td>
-    <td colspan="2"><i>is the single byte end marker,</i> <code>0x01</code></td>
+    <td colspan="2"><i>is the single byte end marker,</i> <code>0x0E</code></td>
   </tr>
   <tr>
     <td valign="top" align="right"><i>ESC</i></td>
-    <td colspan="2"><i>is the single byte escape,</i> <code>0x02</code></td>
+    <td colspan="2"><i>is the single byte escape,</i> <code>0x0C</code></td>
   </tr>
   <tr>
     <td valign="top" align="right"><i>escape(bytes)</i></td>
     <td colspan="2"><i>is a function that replaces every occurrence of:</i>
       <ul>
-        <li><i>B</i> (<code>0x00</code>) <i>with ESC B</i> (<code>0x02 0x00</code>)
-        <li><i>E</i> (<code>0x01</code>) <i>with ESC E</i> (<code>0x02 0x01</code>)
-        <li><i>ESC</i> (<code>0x02</code>) <i>with ESC ESC</i> (<code>0x02 0x02</code>)
+        <li><i>B</i> (<code>0x0B</code>) <i>with ESC B</i> (<code>0x0C 0x0B</code>)
+        <li><i>E</i> (<code>0x0E</code>) <i>with ESC E</i> (<code>0x0C 0x0E</code>)
+        <li><i>ESC</i> (<code>0x0C</code>) <i>with ESC ESC</i> (<code>0x0C 0x0C</code>)
       </ul>
     </td>
   </tr>
@@ -396,14 +396,14 @@ The hash of a struct *field* is calculated by hashing the result of concatenatin
 the serialized bytes of the field name (as a symbol), the serialized bytes
 of the field value, and the end marker E:
 
-> *H(field) → h(B || s(field<sub>name</sub>) || s(field<sub>value</sub>) || E)*
+> *H(field) → h(s(field<sub>name</sub>) || s(field<sub>value</sub>))*
 
 The *representation* for a struct value is found by sorting the hashes
 of all the struct fields, and concatenating them:
 
-<pre><code>                      +---------------------------------------------------------------------------+
-Struct representation | concat(sort(escape(H(field<sub>1</sub>)), escape(H(field<sub>2</sub>)), ..., escape(H(field<sub>n</sub>)))) |
-                      +---------------------------------------------------------------------------+
+<pre><code>                      +-----------------------------------------------------------+
+Struct representation | escape(concat(sort(H(field<sub>1</sub>), H(field<sub>2</sub>), ..., H(field<sub>n</sub>)))) |
+                      +-----------------------------------------------------------+
 </code></pre>
 
 where `sort` is based on a lexicographical ordering of the octets as
