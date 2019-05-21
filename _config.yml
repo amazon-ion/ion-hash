@@ -1,0 +1,17 @@
+name: Ion Hash
+title: Amazon Ion Hash
+description: Amazon Ion Hash defines a hash algorithm for the Ion data model.
+lang: en
+baseurl: /ion-hash
+markdown: kramdown
+kramdown:
+  input: GFM
+  toc_levels: "2,3" 
+highlighter: rouge
+defaults:
+  -
+    scope:
+      path: ""
+    values:
+      layout: default
+
