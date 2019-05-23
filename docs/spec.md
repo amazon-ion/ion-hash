@@ -1,5 +1,5 @@
 ---
-The Amazon Ion Hash Specification
+title: Ion Hash Specification 1.0
 ---
 
 # {{ page.title }}
@@ -12,7 +12,7 @@ by the [Amazon Ion Specification](http://amzn.github.io/ion-docs/spec.html) vers
 *H(value)*, the hash of a value from the Ion data model, is defined as
 follows:
 
-<table cellpadding="5">
+<table style="font-size: 90%">
   <tr>
     <td align="right"><i>H(value)</i></td><td>&rarr;</td><td><i>h(s(value))</i></td>
   </tr>
@@ -97,12 +97,10 @@ follows:
   </tr>
   <tr>
     <td valign="top" align="right"><i>escape(bytes)</i></td>
-    <td colspan="2"><i>is a function that replaces every occurrence of:</i>
-      <ul>
-        <li><i>B</i> (<code>0x0B</code>) <i>with ESC B</i> (<code>0x0C 0x0B</code>)
-        <li><i>E</i> (<code>0x0E</code>) <i>with ESC E</i> (<code>0x0C 0x0E</code>)
-        <li><i>ESC</i> (<code>0x0C</code>) <i>with ESC ESC</i> (<code>0x0C 0x0C</code>)
-      </ul>
+    <td colspan="2"><i>is a function that replaces every occurrence of:</i><br>
+      • <i>B</i> (<code>0x0B</code>) <i>with ESC B</i> (<code>0x0C 0x0B</code>)<br>
+      • <i>E</i> (<code>0x0E</code>) <i>with ESC E</i> (<code>0x0C 0x0E</code>)<br>
+      • <i>ESC</i> (<code>0x0C</code>) <i>with ESC ESC</i> (<code>0x0C 0x0C</code>)
     </td>
   </tr>
   <tr>
@@ -220,7 +218,7 @@ one encoding per the approach described in IEEE 754-2008 section 3.4
 ### 5: decimal
 
 Decimal representations have two components: *exponent* and
-*coefficient*. The decimal's value is *coefficient* \* 10 \^ *exponent*.
+*coefficient*. The decimal's value is *coefficient* \* 10 ^ *exponent*.
 
 ```
                        +---------------------+
@@ -239,11 +237,11 @@ If the value is `0.` (*aka* `0d0`) there is no *representation*
 subfield.
 
 An exponent with the value `-0` is not distinct from `0`, and shall be
-encoded as `0` (0x80).
+encoded as `0` (`0x80`).
 
-Decimal values of the form 0dN (for any value of N except -0) are
+Decimal values of the form <code>0d<i>N</i></code> (for any value of *N* except `-0`) are
 distinct values and thereby have different encodings; similarly, decimal
-values of the form -0dN are distinct values and have different
+values of the form <code>-0d<i>N</i></code> are distinct values and have different
 encodings.
 
 ### 6: timestamp
@@ -286,20 +284,19 @@ is illegal to have *hour* but not *minute* (and vice versa).
 
 The *fraction\_exponent* and *fraction\_coefficient* denote the
 fractional seconds of the timestamp as a decimal value. The fractional
-seconds value is *coefficient* \* 10 \^ *exponent*. It must be greater
+seconds value is *coefficient* \* 10 ^ *exponent*. It must be greater
 than or equal to zero and less than 1. A *coefficient* of zero shall not
 be encoded, as zero is the default. Fractions whose coefficient is zero
 and exponent is greater than -1 are illegal and shall not be encoded.
 The following hex sequences are the *representation* field of valid Ion
 binary timestamps, and are all equivalent:
 
-```
-80 0F D0 81 81 80 80 80       // 2000-01-01T00:00:00Z with no fractional seconds
+<pre><span style="font-size: 85%">80 0F D0 81 81 80 80 80       // 2000-01-01T00:00:00Z with no fractional seconds
 80 0F D0 81 81 80 80 80 80    // The same instant with 0d0 fractional seconds and implicit zero coefficient
 80 0F D0 81 81 80 80 80 80 00 // The same instant with 0d0 fractional seconds and explicit zero coefficient
 80 0F D0 81 81 80 80 80 C0    // The same instant with 0d-0 fractional seconds
 80 0F D0 81 81 80 80 80 81    // The same instant with 0d1 fractional seconds
-```
+</span></pre>
 
 For hashing purposes, minimal/compact form is required, so the
 representation of all of the above timestamps shall be
@@ -377,10 +374,10 @@ Zero-length blobs are legal, so *representation* may be empty.
 The representation of a `list` is the ordered concatenation of the serialized bytes of
 the contained elements.
 
-<pre><code>                    +-------------------------------------------+
+<pre>                    +-------------------------------------------+
 List representation | s(value<sub>1</sub>) || s(value<sub>2</sub>) || ... || s(value<sub>n</sub>) |
                     +-------------------------------------------+
-</code></pre>
+</pre>
 
 ### 12: sexp
 
@@ -396,15 +393,15 @@ The hash of a struct *field* is calculated by hashing the result of concatenatin
 the serialized bytes of the field name (as a symbol), the serialized bytes
 of the field value, and the end marker E:
 
-> *H(field) → h(s(field<sub>name</sub>) || s(field<sub>value</sub>))*
+> *H(field) → h(s(field<sub>name</sub>) \|\| s(field<sub>value</sub>))*
 
 The *representation* for a struct value is found by sorting the hashes
 of all the struct fields, and concatenating them:
 
-<pre><code>                      +-----------------------------------------------------------+
+<pre>                      +-----------------------------------------------------------+
 Struct representation | escape(concat(sort(H(field<sub>1</sub>), H(field<sub>2</sub>), ..., H(field<sub>n</sub>)))) |
                       +-----------------------------------------------------------+
-</code></pre>
+</pre>
 
 where `sort` is based on a lexicographical ordering of the octets as
 unsigned integers.
@@ -418,10 +415,10 @@ Values of type `annotation` are wrappers around another value.
 Calculating the *representation* simply involves concatenating the
 serialized bytes of each annotation (as a symbol) and the value as follows:
 
-<pre><code>                               +----------------------------------------------------------------------+
+<pre><span style="font-size: 90%">                               +----------------------------------------------------------------------+
 Annotated value representation | s(annotation<sub>1</sub>) || s(annotation<sub>2</sub>) || ... || s(annotation<sub>n</sub>) || s(value) |
                                +----------------------------------------------------------------------+
-</code></pre>
+</span></pre>
 
 There must be at least one annotation.
 
