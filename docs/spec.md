@@ -1,5 +1,5 @@
 ---
-title: Ion Hash Specification
+title: Ion Hash Specification 1.0
 ---
 
 # {{ page.title }}

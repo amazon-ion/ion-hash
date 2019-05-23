@@ -1,6 +1,6 @@
 ---
 layout: news_item
-title: "Ion Hash Specification Released"
+title: "Ion Hash Specification 1.0 Released"
 date: 2019-05-23
 categories: news
 ---
