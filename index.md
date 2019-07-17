@@ -20,7 +20,7 @@ For more information, see the [Ion Hash Specification][1].
 ### Latest News
 
 ---
-{% for post in site.posts limit:2 %}
+{% for post in site.posts limit:3 %}
   **<a href="{{site.baseurl}}{{post.url}}">{{ post.title }}</a>**<br/>
   *{{post.date | date_to_long_string}}*<br/>
   {{post.content}}
