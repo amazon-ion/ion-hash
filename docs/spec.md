@@ -153,7 +153,7 @@ be specified by each Ion type; if not specified, *Q* shall be `0`.
 ### 0: null
 
 The value `null` (*aka* `null.null`) has no *representation* field, and
-is encoded by the single byte `0x0F` (T=0, L=15).
+is encoded by the single byte `0x0F` (T=0, Q=15).
 
 | value  | TQ byte |
 | ----:  | ------- |
