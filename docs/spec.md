@@ -389,9 +389,9 @@ except with a different type code.
 Values of type `struct` are a group of unordered, named fields; ordering
 must be imposed for hashing purposes.
 
-The hash of a struct *field* is calculated by hashing the result of concatenating the begin marker B,
-the serialized bytes of the field name (as a symbol), the serialized bytes
-of the field value, and the end marker E:
+The hash of a struct *field* is calculated by hashing the result of concatenating 
+the serialized bytes of the field name (as a symbol) and the serialized bytes
+of the field value:
 
 > *H(field) → h(s(field<sub>name</sub>) \|\| s(field<sub>value</sub>))*
 
