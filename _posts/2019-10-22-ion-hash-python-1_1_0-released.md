@@ -8,5 +8,5 @@ This release adds support for hashing timestamps with arbitrary precision.
 
 This package is available at [PyPI](https://pypi.org/project/ionhash/).
 
-| [Ion Hash Python](https://github.com/amzn/ion-hash-python) |
+| [Ion Hash Python](https://github.com/amazon-ion/ion-hash-python) |
 

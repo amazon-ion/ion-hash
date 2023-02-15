@@ -33,5 +33,5 @@ Visit the [News][2] page for more announcements related to Ion Hash.
 <!-- References -->
 [1]: docs/spec.html
 [2]: news.html
-[3]: https://amzn.github.io/ion-docs/
+[3]: https://amazon-ion.github.io/ion-docs/
 
