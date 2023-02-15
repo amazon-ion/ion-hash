@@ -9,4 +9,4 @@ and adds details to the README's setup instructions.
 
 This package is available at [PyPI](https://pypi.org/project/ionhash/).
 
-| [Release Notes](https://github.com/amzn/ion-hash-python/releases/tag/v1.2.1) | [Ion Hash Python](https://github.com/amzn/ion-hash-python) |
+| [Release Notes](https://github.com/amazon-ion/ion-hash-python/releases/tag/v1.2.1) | [Ion Hash Python](https://github.com/amazon-ion/ion-hash-python) |

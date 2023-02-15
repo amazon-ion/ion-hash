@@ -5,7 +5,7 @@ title: Ion Hash Specification 1.0
 # {{ page.title }}
 
 This specification defines a hash algorithm for the Ion Data Model, as defined
-by the [Amazon Ion Specification](http://amzn.github.io/ion-docs/spec.html) version 1.0.
+by the [Amazon Ion Specification](https://amazon-ion.github.io/ion-docs/spec.html) version 1.0.
 
 ## Algorithm
 
@@ -122,7 +122,7 @@ callers to define the *h(bytes)* function.
 ## Basic Field Formats
 
 Any UInt, Int, VarUInt, or VarInt fields are encoded in the manner
-defined in the [Amazon Ion Binary Encoding](http://amzn.github.io/ion-docs/binary.html)
+defined in the [Amazon Ion Binary Encoding](https://amazon-ion.github.io/ion-docs/binary.html)
 specification with one difference: such fields are encoded in minimal
 fashion. No padding is allowed, and subfields must be be omitted from 
 representations whenever possible.
